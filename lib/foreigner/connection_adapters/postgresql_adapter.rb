@@ -17,7 +17,7 @@ module Foreigner
             AND t3.nspname = ANY (current_schemas(false))
           ORDER BY c.conname
         }
-        
+
         fk_info.map do |row|
           options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
 
@@ -34,11 +34,9 @@ module Foreigner
   end
 end
 
-[:PostgreSQLAdapter, :JdbcAdapter].each do |adapter|
-  begin
-    ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
-      include Foreigner::ConnectionAdapters::PostgreSQLAdapter
-    end
-  rescue
+begin
+  ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
+    include Foreigner::ConnectionAdapters::PostgreSQLAdapter
   end
+rescue
 end
